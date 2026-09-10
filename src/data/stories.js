@@ -930,21 +930,17 @@ const originalStories = [
     videoId: "",
     thumbnail: ""
   },
-    level: 61,
-    duration: "5:15",
-    description: "Climate and sustainability",
-    vocabulary: ["environment", "sustainability", "conservation", "ecosystem"],
-    videoId: "",
-    thumbnail: ""
-  },
   {
     id: 62,
-    title: "The Entrepreneur",
+    title: "Emphasizing the Truth / Gerçeği Vurgulamak",
     difficulty: "advanced",
     level: 62,
-    duration: "5:30",
-    description: "Business and success stories",
-    vocabulary: ["entrepreneur", "enterprise", "investment", "strategy"],
+    duration: "5:00",
+    description: "The storm passed, and the morning sun filled the museum. It was Emma who finally connected all the impossible clues together.",
+    grammarFocus: "Cleft Sentences (Vurgu Cümleleri)",
+    englishText: "The storm passed, and the morning sun filled the museum. It was Emma who finally connected all the impossible clues together. 'What they need is a magnifying glass to see this tiny signature,' she said. She pointed at the corner of the map. 'It was in 1910 that the house was originally built to protect the village library, not gold.' Mr. Lane smiled with a deep sense of peace. The reason why the safe was empty from the beginning is still unknown to the world, but they know the truth. The young manager looked at his old teacher and the amazing museum around them. It is the grandfather's legacy of knowledge, not the hidden gold, that truly keeps them together.",
+    turkishText: "Fırtına geçti ve sabah güneşi müzeyi doldurdu. Tüm imkansız ipuçlarını sonunda bir araya getiren kişi Emma'ydı. 'Bu küçücük imzayı görmek için ihtiyaçları olan şey bir büyüteçtir,' dedi. Haritanın köşesini işaret etti. 'Evin altınları değil, köy kütüphanesini korumak için orijinal olarak inşa edildiği yıl 1910'du.' Mr. Lane derin bir huzur duygusuyla gülümsedi. Kasanın başından beri neden boş olduğunun sebebi dünya için hala bilinmiyor, ama onlar gerçeği biliyorlar. Genç müdür yaşlı öğretmenine ve etraflarındaki muhteşem müzeye baktı. Onları gerçekten bir arada tutan şey saklı altın değil, dedenin bilgi mirasıdır.",
+    vocabulary: ["it was Emma who", "what they need is", "it was in 1910 that", "the reason why", "it is the grandfather's legacy"],
     videoId: "",
     thumbnail: ""
   },
