@@ -1,7 +1,7 @@
 // 85 hikaye - zorluk seviyelerine göre organize edilmiş
 // Her hikaye birbirinin devamıdır
 
-export const stories = [
+const originalStories = [
   // BEGINNER (1-28) - En basit seviye
   {
     id: 1,
@@ -1219,6 +1219,9 @@ export const stories = [
     thumbnail: ""
   }
 ];
+
+// Filter out stories with empty or very short content
+export const stories = originalStories.filter(story => story.englishText && story.englishText.length > 10);
 
 export const difficultyLevels = {
   beginner: { label: "Başlangıç", color: "bg-green-100 text-green-800", range: "1-28" },
