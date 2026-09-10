@@ -15,12 +15,6 @@ export default function Footer() {
           
           <div>
             <h4 className="font-semibold mb-4">İletişim</h4>
-            <div className="flex items-center space-x-2 text-gray-400 text-sm mb-3">
-              <Mail className="w-4 h-4" />
-              <a href="mailto:abdullahsencer@yandex.com" className="hover:text-white transition-colors break-all">
-                abdullahsencer@yandex.com
-              </a>
-            </div>
             <div className="flex space-x-4 mt-4">
               <a 
                 href="https://www.instagram.com/a1_a2_ingilizce/" 

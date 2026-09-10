@@ -45,3 +45,5 @@ Thumbs.db
 # Misc
 .vercel/
 .netlify/
+.vercel
+.env*

@@ -70,7 +70,15 @@ function App() {
           <>
             <Hero />
             {user && <QuickProgress user={user} />}
-            <Levels />
+            <Levels onLevelClick={(difficulty) => {
+              setInitialDifficulty(difficulty);
+              setTimeout(() => {
+                const element = document.getElementById('stories');
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              }, 100);
+            }} />
             <StoryList user={user} />
             <About />
           </>
@@ -185,8 +193,10 @@ function App() {
         darkMode={darkMode}
         setDarkMode={setDarkMode}
       />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {renderContent()}
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto">
+          {renderContent()}
+        </div>
       </div>
       <Footer />
       {showAuth && (
