@@ -1,7 +1,7 @@
 // 85 hikaye - zorluk seviyelerine göre organize edilmiş
 // Her hikaye birbirinin devamıdır
 
-const originalStories = [
+export const stories = [
   // BEGINNER (1-28) - En basit seviye
   {
     id: 1,
