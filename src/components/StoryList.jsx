@@ -27,6 +27,7 @@ export default function StoryList({ user, initialDifficulty }) {
   }, [selectedDifficulty, searchQuery]);
 
   const handleStoryClick = useCallback((story) => {
+    console.log('Hikaye tıklandı:', story);
     setSelectedStory(story);
   }, []);
 

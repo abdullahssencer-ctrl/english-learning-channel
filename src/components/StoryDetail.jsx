@@ -142,6 +142,17 @@ export default function StoryDetail({ story, onBack, user }) {
     );
   }
 
+  // Debug: Story verilerini kontrol et
+  console.log('Story verileri:', {
+    id: story.id,
+    title: story.title,
+    hasEnglishText: !!story.englishText,
+    hasTurkishText: !!story.turkishText,
+    englishTextLength: story.englishText?.length || 0,
+    turkishTextLength: story.turkishText?.length || 0,
+    vocabularyLength: story.vocabulary?.length || 0
+  });
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 py-12 px-4">
       <div className="max-w-4xl mx-auto">
