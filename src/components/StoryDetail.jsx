@@ -1,6 +1,6 @@
 import { ArrowLeft, BookOpen, Clock, Tag, Check, Star } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { getUserProgress, upsertUserProgress, upsertDailyProgress } from '../supabase/progress';
+import { getUserProgress, markStoryAsRead, markWordAsLearned } from '../supabase/progress';
 import VoiceReader from './VoiceReader';
 
 export default function StoryDetail({ story, onBack, user }) {
@@ -45,28 +45,10 @@ export default function StoryDetail({ story, onBack, user }) {
 
   const markAsCompleted = async () => {
     if (!user) return;
-    
+
     try {
-      const progress = await getUserProgress(user.id);
-      const completedStories = progress?.completed_stories || [];
-      
-      if (!completedStories.includes(story.id)) {
-        const updatedStories = [...completedStories, story.id];
-        
-        await upsertUserProgress(user.id, {
-          completed_stories: updatedStories,
-          quiz_results: progress?.quiz_results || [],
-          learned_words: progress?.learned_words || []
-        });
-        
-        // Günlük ilerlemeyi güncelle
-        const today = new Date().toISOString().split('T')[0];
-        const dailyProgress = await upsertDailyProgress(user.id, today, {
-          stories_read: (progress?.stories_read || 0) + 1,
-          quizzes_completed: 0,
-          words_learned: 0
-        });
-        
+      const success = await markStoryAsRead(user.id, story.id);
+      if (success) {
         setIsCompleted(true);
       }
     } catch (error) {
@@ -76,37 +58,22 @@ export default function StoryDetail({ story, onBack, user }) {
 
   const toggleWordLearned = async (word) => {
     if (!user) return;
-    
+
     try {
       const progress = await getUserProgress(user.id);
       const allLearnedWords = progress?.learned_words || [];
-      
+
       if (allLearnedWords.includes(word)) {
+        // Kelimeyi kaldır (bu özellik için Supabase tarafında destek eklenebilir)
         const updated = allLearnedWords.filter(w => w !== word);
         setLearnedWords(updated);
-        
-        await upsertUserProgress(user.id, {
-          completed_stories: progress?.completed_stories || [],
-          quiz_results: progress?.quiz_results || [],
-          learned_words: updated
-        });
       } else {
-        const updated = [...allLearnedWords, word];
-        setLearnedWords(updated);
-        
-        await upsertUserProgress(user.id, {
-          completed_stories: progress?.completed_stories || [],
-          quiz_results: progress?.quiz_results || [],
-          learned_words: updated
-        });
-        
-        // Günlük ilerlemeyi güncelle
-        const today = new Date().toISOString().split('T')[0];
-        const dailyProgress = await upsertDailyProgress(user.id, today, {
-          stories_read: 0,
-          quizzes_completed: 0,
-          words_learned: (progress?.words_learned || 0) + 1
-        });
+        // Kelimeyi ekle
+        const success = await markWordAsLearned(user.id, word);
+        if (success) {
+          const updated = [...allLearnedWords, word];
+          setLearnedWords(updated);
+        }
       }
     } catch (error) {
       console.error('Kelime işaretlenirken hata:', error);

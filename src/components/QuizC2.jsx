@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { quizC2 } from '../data/quizC2.js';
 import { CheckCircle, XCircle, ChevronRight, ChevronLeft, Award, RotateCcw } from 'lucide-react';
-import { getUserProgress, upsertUserProgress, upsertDailyProgress } from '../supabase/progress';
+import { saveQuizResult } from '../supabase/progress';
 
 export default function QuizC2({ user }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -61,33 +61,18 @@ export default function QuizC2({ user }) {
     handleReset();
   };
 
-  const saveQuizResult = async (score, totalQuestions) => {
+  const saveQuizResultInternal = async (score, totalQuestions) => {
     if (!user) return;
-    
-    const progress = await getUserProgress(user.id);
-    const quizResults = progress?.quiz_results || [];
-    
-    quizResults.push({
+
+    const result = {
       quizId: 'C2',
       score,
       correctCount: score,
       totalQuestions,
       completedAt: new Date().toISOString()
-    });
-    
-    await upsertUserProgress(user.id, {
-      completed_stories: progress?.completed_stories || [],
-      quiz_results: quizResults,
-      learned_words: progress?.learned_words || []
-    });
-    
-    // Günlük ilerlemeyi güncelle
-    const today = new Date().toISOString().split('T')[0];
-    await upsertDailyProgress(user.id, today, {
-      stories_read: 0,
-      quizzes_completed: (progress?.quizzes_completed || 0) + 1,
-      words_learned: 0
-    });
+    };
+
+    await saveQuizResult(user.id, result);
   };
 
   const getScoreMessage = () => {
@@ -106,7 +91,7 @@ export default function QuizC2({ user }) {
     
     // Sonucu kaydet (sadece bir kez)
     if (!hasSavedResult) {
-      saveQuizResult(score, quizC2.questions.length);
+      saveQuizResultInternal(score, quizC2.questions.length);
       setHasSavedResult(true);
     }
 

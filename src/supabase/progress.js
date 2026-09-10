@@ -137,3 +137,115 @@ export const addBadge = async (userId, badgeId) => {
 
   return data;
 };
+
+// Hikaye okundu olarak işaretle
+export const markStoryAsRead = async (userId, storyId) => {
+  try {
+    const progress = await getUserProgress(userId);
+    if (!progress) return false;
+
+    // Hikaye zaten okunmuş mu kontrol et
+    if (progress.completed_stories?.includes(storyId)) {
+      return true;
+    }
+
+    // Hikayeyi ekle
+    const { error } = await supabase
+      .from('user_progress')
+      .update({
+        completed_stories: [...(progress.completed_stories || []), storyId],
+        last_updated: new Date().toISOString()
+      })
+      .eq('user_id', userId);
+
+    if (error) throw error;
+
+    // Günlük ilerlemeyi güncelle
+    const today = new Date().toISOString().split('T')[0];
+    await upsertDailyProgress(userId, today, {
+      stories_read: 1,
+      quizzes_completed: 0,
+      words_learned: 0
+    });
+
+    // Cache'i güncelle
+    progressCache.delete(userId);
+
+    return true;
+  } catch (error) {
+    console.error('Hikaye işaretlenirken hata:', error);
+    return false;
+  }
+};
+
+// Kelime öğrenildi olarak işaretle
+export const markWordAsLearned = async (userId, word) => {
+  try {
+    const progress = await getUserProgress(userId);
+    if (!progress) return false;
+
+    if (progress.learned_words?.includes(word)) {
+      return true;
+    }
+
+    const { error } = await supabase
+      .from('user_progress')
+      .update({
+        learned_words: [...(progress.learned_words || []), word],
+        last_updated: new Date().toISOString()
+      })
+      .eq('user_id', userId);
+
+    if (error) throw error;
+
+    // Günlük ilerlemeyi güncelle
+    const today = new Date().toISOString().split('T')[0];
+    await upsertDailyProgress(userId, today, {
+      stories_read: 0,
+      quizzes_completed: 0,
+      words_learned: 1
+    });
+
+    // Cache'i güncelle
+    progressCache.delete(userId);
+
+    return true;
+  } catch (error) {
+    console.error('Kelime işaretlenirken hata:', error);
+    return false;
+  }
+};
+
+// Quiz sonucunu kaydet
+export const saveQuizResult = async (userId, quizResult) => {
+  try {
+    const progress = await getUserProgress(userId);
+    if (!progress) return false;
+
+    const { error } = await supabase
+      .from('user_progress')
+      .update({
+        quiz_results: [...(progress.quiz_results || []), quizResult],
+        last_updated: new Date().toISOString()
+      })
+      .eq('user_id', userId);
+
+    if (error) throw error;
+
+    // Günlük ilerlemeyi güncelle
+    const today = new Date().toISOString().split('T')[0];
+    await upsertDailyProgress(userId, today, {
+      stories_read: 0,
+      quizzes_completed: 1,
+      words_learned: 0
+    });
+
+    // Cache'i güncelle
+    progressCache.delete(userId);
+
+    return true;
+  } catch (error) {
+    console.error('Quiz sonucu kaydedilirken hata:', error);
+    return false;
+  }
+};
