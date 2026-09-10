@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { stories as storiesData, difficultyLevels } from '../data/stories';
+import { stories, difficultyLevels } from '../data/stories';
 import StoryCard from './StoryCard';
 import StoryDetail from './StoryDetail';
 import { Filter, Search } from 'lucide-react';
@@ -17,7 +17,7 @@ export default function StoryList({ user, initialDifficulty }) {
   }, [initialDifficulty]);
 
   const filteredStories = useMemo(() => {
-    return storiesData.filter(story => {
+    return stories.filter(story => {
       const matchesDifficulty = selectedDifficulty === 'all' || story.difficulty === selectedDifficulty;
       const matchesSearch = story.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            story.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -39,7 +39,7 @@ export default function StoryList({ user, initialDifficulty }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Hikaye Listesi</h2>
-          <p className="text-gray-600 text-lg">{storiesData.length} hikaye, zorluk seviyesine göre filtreleyebilirsiniz</p>
+          <p className="text-gray-600 text-lg">{stories.length} hikaye, zorluk seviyesine göre filtreleyebilirsiniz</p>
         </div>
 
         <div className="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">

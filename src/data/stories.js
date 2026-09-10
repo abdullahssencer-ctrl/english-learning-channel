@@ -1,7 +1,7 @@
 // 85 hikaye - zorluk seviyelerine göre organize edilmiş
 // Her hikaye birbirinin devamıdır
 
-export const stories = [
+const storiesData = [
   // BEGINNER (1-28) - En basit seviye
   {
     id: 1,
@@ -564,83 +564,6 @@ export const stories = [
     thumbnail: ""
   },
   {
-    id: 34,
-    title: "The Busy Market",
-    difficulty: "intermediate",
-    level: 34,
-    duration: "4:15",
-    description: "Shopping and bargaining",
-    vocabulary: ["market", "expensive", " bargain", "customer"],
-    videoId: "",
-    thumbnail: ""
-  },
-  {
-    id: 35,
-    title: "Cooking Together",
-    difficulty: "intermediate",
-    level: 35,
-    duration: "4:00",
-    description: "Following recipes and cooking",
-    vocabulary: ["recipe", "ingredients", "delicious", "kitchen"],
-    videoId: "",
-    thumbnail: ""
-  },
-  {
-    id: 36,
-    title: "The Stormy Night",
-    difficulty: "intermediate",
-    level: 36,
-    duration: "4:30",
-    description: "Weather emergencies and safety",
-    vocabulary: ["storm", "thunder", "lightning", "shelter"],
-    videoId: "",
-    thumbnail: ""
-  },
-  {
-    id: 37,
-    title: "Learning a Skill",
-    difficulty: "intermediate",
-    level: 37,
-    duration: "4:15",
-    description: "Mastering new abilities",
-    vocabulary: ["practice", "improve", "patient", "achievement"],
-    videoId: "",
-    thumbnail: ""
-  },
-  {
-    id: 38,
-    title: "The Picnic",
-    difficulty: "intermediate",
-    level: 38,
-    duration: "3:45",
-    description: "Outdoor activities and nature",
-    vocabulary: ["picnic", "blanket", "sandwich", "relax"],
-    videoId: "",
-    thumbnail: ""
-  },
-  {
-    id: 39,
-    title: "A Birthday Party",
-    difficulty: "intermediate",
-    level: 39,
-    duration: "4:00",
-    description: "Celebrations and traditions",
-    vocabulary: ["celebration", "tradition", "decorate", "invite"],
-    videoId: "",
-    thumbnail: ""
-  },
-  {
-    id: 40,
-    title: "The Bicycle Ride",
-    difficulty: "intermediate",
-    level: 40,
-    duration: "4:15",
-    description: "Exercise and exploration",
-    vocabulary: ["bicycle", "exercise", "explore", "scenery"],
-    videoId: "",
-    thumbnail: ""
-  },
-  {
     id: 41,
     title: "A Long Project / Uzun Bir Proje",
     difficulty: "upper-intermediate",
@@ -838,23 +761,29 @@ export const stories = [
   },
   {
     id: 55,
-    title: "A New Language",
-    difficulty: "advanced",
+    title: "A New Language / Yeni Bir Dil",
+    difficulty: "upper-intermediate",
     level: 55,
-    duration: "4:15",
-    description: "Language learning process",
-    vocabulary: ["language", "translate", "pronounce", "fluency"],
+    duration: "4:30",
+    description: "The boy started learning a new language to communicate with international visitors.",
+    grammarFocus: "Causative Verbs (Yaptırma Edilgen Yapılar)",
+    englishText: "The boy decided to learn a new language because many international visitors were coming to the museum. He got a tutor to teach him French every evening. Mr. Lane had the study materials prepared for him. 'I want to have my skills tested soon,' the boy said with determination. They got the lessons recorded so he could practice later. The villagers had their children encouraged to learn languages too. 'Having learned a new language opens many doors,' Mr. Lane explained. The boy made himself understood by the French visitors. They got the museum brochure translated into multiple languages.",
+    turkishText: "Çocuk, müzeye çok sayıda uluslararası ziyaretçi geleceği için yeni bir dil öğrenmeye karar verdi. Her akşam ona Fransızca öğretmesi için bir özel ders öğretmeni ayarladı. Mr. Lane, ders materyallerinin onun için hazırlanmasını sağladı. 'Yakında becerilerimi test ettirmek istiyorum,' dedi çocuk kararlılıkla. Daha sonra pratik yapabilmesi için dersleri kaydettirdiler. Köylüler de çocuklarının dil öğrenmeye teşvik edilmesini sağladılar. 'Yeni bir dil öğrenmek birçok kapı açar,' diye açıkladı Mr. Lane. Çocuk, Fransız ziyaretçiler tarafından anlaşıldı. Müze broşürünü birden fazla dile çevirdiler.",
+    vocabulary: ["got a tutor", "had the study materials prepared", "want to have my skills tested", "got the lessons recorded", "had their children encouraged", "having learned", "made himself understood", "got the brochure translated"],
     videoId: "",
     thumbnail: ""
   },
   {
     id: 56,
-    title: "The Holiday Plan",
-    difficulty: "intermediate",
+    title: "The Holiday Plan / Tatil Planı",
+    difficulty: "upper-intermediate",
     level: 56,
-    duration: "4:30",
-    description: "Planning and organizing trips",
-    vocabulary: ["holiday", "itinerary", "reservation", "destination"],
+    duration: "4:45",
+    description: "Planning a holiday after completing the museum project.",
+    grammarFocus: "Future Perfect Continuous (Gelecekte Bitmiş Devam Eden)",
+    englishText: "By next month, Mr. Lane and the boy will have been working on the museum for exactly one year. They decided to plan a holiday to celebrate their achievement. 'By the time we return, the summer season will have started,' Mr. Lane said. They will have been traveling through Europe for two weeks. The villagers will have been missing them, but they arranged everything. 'We will have been exploring new cultures,' the boy excitedly added. They will have been staying in different hotels each night. By the end of the trip, they will have been collecting many new ideas for the museum.",
+    turkishText: "Gelecek ay gelindiğinde, Mr. Lane ve çocuk tam olarak bir yıldır müze üzerinde çalışmış olacaklar. Başarılarını kutlamak için bir tatil planlamaya karar verdiler. 'Döndüğümüzde yaz sezonu başlamış olacak,' dedi Mr. Lane. İki hafta boyunca Avrupa'yı gezmekte olacaklar. Köylüler onları özlemiş olacaklar, ancak her şeyi düzenlediler. 'Yeni kültürleri keşfetmekte olacağız,' diye heyecanla ekledi çocuk. Her gece farklı otellerde kalmış olacaklar. Yolculuğun sonuna geldiklerinde, müze için birçok yeni fikir toplamış olacaklar.",
+    vocabulary: ["will have been working", "will have started", "will have been traveling", "will have been missing", "will have been exploring", "will have been staying", "will have been collecting"],
     videoId: "",
     thumbnail: ""
   },
@@ -1267,6 +1196,8 @@ export const stories = [
     thumbnail: ""
   }
 ];
+
+export const stories = storiesData;
 
 export const difficultyLevels = {
   beginner: { label: "Başlangıç", color: "bg-green-100 text-green-800", range: "1-28" },
