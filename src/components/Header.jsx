@@ -42,12 +42,12 @@ export default function Header({ activeSection, setActiveSection, onDashboardCli
           </div>
           
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-2">
+          <nav className="hidden xl:flex flex-wrap gap-2">
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-colors ${
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium text-sm transition-colors ${
                   activeSection === item.id
                     ? `bg-${item.color}-100 text-${item.color}-700`
                     : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
@@ -62,13 +62,13 @@ export default function Header({ activeSection, setActiveSection, onDashboardCli
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            className="xl:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
 
           {/* Desktop Auth & Theme */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden xl:flex items-center gap-3">
             <button
               onClick={() => setDarkMode(!darkMode)}
               className="flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-colors bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
@@ -106,7 +106,7 @@ export default function Header({ activeSection, setActiveSection, onDashboardCli
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200">
+          <div className="xl:hidden py-4 border-t border-gray-200">
             <div className="grid grid-cols-2 gap-2 mb-4">
               {navItems.map((item) => (
                 <button
