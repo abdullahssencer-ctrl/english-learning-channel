@@ -40,7 +40,7 @@ export const upsertUserProgress = async (userId, progressData) => {
         user_id: userId,
         ...progressData,
         last_updated: new Date().toISOString()
-      })
+      }, { onConflict: 'user_id' })
       .select()
       .single();
 
@@ -85,7 +85,7 @@ export const upsertDailyProgress = async (userId, date, progressData) => {
         user_id: userId,
         date,
         ...progressData
-      })
+      }, { onConflict: 'user_id,date' })
       .select()
       .single();
 
@@ -142,21 +142,22 @@ export const addBadge = async (userId, badgeId) => {
 export const markStoryAsRead = async (userId, storyId) => {
   try {
     const progress = await getUserProgress(userId);
-    if (!progress) return false;
 
     // Hikaye zaten okunmuş mu kontrol et
-    if (progress.completed_stories?.includes(storyId)) {
+    if (progress?.completed_stories?.includes(storyId)) {
       return true;
     }
 
-    // Hikayeyi ekle
+    // Hikayeyi ekle (satır yoksa oluşturur, varsa günceller)
     const { error } = await supabase
       .from('user_progress')
-      .update({
-        completed_stories: [...(progress.completed_stories || []), storyId],
+      .upsert({
+        user_id: userId,
+        completed_stories: [...(progress?.completed_stories || []), storyId],
+        quiz_results: progress?.quiz_results || [],
+        learned_words: progress?.learned_words || [],
         last_updated: new Date().toISOString()
-      })
-      .eq('user_id', userId);
+      }, { onConflict: 'user_id' });
 
     if (error) throw error;
 
@@ -182,19 +183,20 @@ export const markStoryAsRead = async (userId, storyId) => {
 export const markWordAsLearned = async (userId, word) => {
   try {
     const progress = await getUserProgress(userId);
-    if (!progress) return false;
 
-    if (progress.learned_words?.includes(word)) {
+    if (progress?.learned_words?.includes(word)) {
       return true;
     }
 
     const { error } = await supabase
       .from('user_progress')
-      .update({
-        learned_words: [...(progress.learned_words || []), word],
+      .upsert({
+        user_id: userId,
+        completed_stories: progress?.completed_stories || [],
+        quiz_results: progress?.quiz_results || [],
+        learned_words: [...(progress?.learned_words || []), word],
         last_updated: new Date().toISOString()
-      })
-      .eq('user_id', userId);
+      }, { onConflict: 'user_id' });
 
     if (error) throw error;
 
@@ -220,15 +222,16 @@ export const markWordAsLearned = async (userId, word) => {
 export const saveQuizResult = async (userId, quizResult) => {
   try {
     const progress = await getUserProgress(userId);
-    if (!progress) return false;
 
     const { error } = await supabase
       .from('user_progress')
-      .update({
-        quiz_results: [...(progress.quiz_results || []), quizResult],
+      .upsert({
+        user_id: userId,
+        completed_stories: progress?.completed_stories || [],
+        quiz_results: [...(progress?.quiz_results || []), quizResult],
+        learned_words: progress?.learned_words || [],
         last_updated: new Date().toISOString()
-      })
-      .eq('user_id', userId);
+      }, { onConflict: 'user_id' });
 
     if (error) throw error;
 
