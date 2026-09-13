@@ -1,5 +1,6 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { supabase } from './supabase/config';
+import { getUserLastStory } from './supabase/lastStory';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import StoryList from './components/StoryList';
@@ -26,10 +27,16 @@ const Profile = lazy(() => import('./components/Profile'));
 
 function App() {
   const [activeSection, setActiveSection] = useState('home');
-  const [user, setUser] = useState(null);
   const [showAuth, setShowAuth] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
   const [initialDifficulty, setInitialDifficulty] = useState(null);
+  // Zustand store hooks
+  const user = useStore(state => state.user);
+  const setUser = useStore(state => state.setUser);
+  const darkMode = useStore(state => state.darkMode);
+  const toggleDarkMode = useStore(state => state.toggleDarkMode);
+  const lastStoryId = useStore(state => state.lastStoryId);
+  const setLastStoryId = useStore(state => state.setLastStoryId);
+
 
   useEffect(() => {
     // Mevcut session'ı kontrol et
@@ -79,7 +86,7 @@ function App() {
                 }
               }, 100);
             }} />
-            <StoryList user={user} />
+            <StoryList user={user} initialDifficulty={initialDifficulty} initialStoryId={lastStoryId} />
             <About />
           </>
         );
@@ -190,8 +197,6 @@ function App() {
         user={user}
         onDashboardClick={handleDashboardClick}
         onAuthClick={handleAuthClick}
-        darkMode={darkMode}
-        setDarkMode={setDarkMode}
       />
       <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-7xl mx-auto">

@@ -1,7 +1,11 @@
-import { ArrowLeft, BookOpen, Clock, Tag, Check, Star } from 'lucide-react';
+import useStore from '../store/useStore';
+import HighlightText from './HighlightText';
 import { useState, useEffect } from 'react';
 import { getUserProgress, markStoryAsRead, markWordAsLearned } from '../supabase/progress';
 import VoiceReader from './VoiceReader';
+import debounce from 'lodash.debounce';
+import { getUserLastStory, upsertUserLastStory } from '../supabase/lastStory';
+import { ArrowLeft, BookOpen, Clock, Tag, Check } from 'lucide-react';
 
 export default function StoryDetail({ story, onBack, user }) {
   const [isCompleted, setIsCompleted] = useState(false);
@@ -43,6 +47,29 @@ export default function StoryDetail({ story, onBack, user }) {
     loadProgress();
   }, [story.id, user]);
 
+  // Persist and restore scroll position per story using Supabase
+  useEffect(() => {
+    if (!user || !story) return;
+    // Restore scroll position on mount
+    const restoreScroll = async () => {
+      const last = await getUserLastStory(user.id, story.id);
+      if (last && typeof last.scrollPosition === 'number') {
+        window.scrollTo(0, last.scrollPosition);
+      }
+    };
+    restoreScroll();
+
+    const handleScroll = debounce(() => {
+      const pos = window.scrollY;
+      upsertUserLastStory(user.id, story.id, pos);
+    }, 1000);
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [user, story.id]);
+
   const markAsCompleted = async () => {
     if (!user) return;
 
@@ -50,6 +77,11 @@ export default function StoryDetail({ story, onBack, user }) {
       const success = await markStoryAsRead(user.id, story.id);
       if (success) {
         setIsCompleted(true);
+        // Gamification: add XP and streak
+        const addXp = useStore.getState().addXp;
+        const incrementStreak = useStore.getState().incrementStreak;
+        addXp(10);
+        incrementStreak();
       }
     } catch (error) {
       console.error('Hikaye tamamlanırken hata:', error);
@@ -178,7 +210,7 @@ export default function StoryDetail({ story, onBack, user }) {
               <VoiceReader text={story.englishText} language="en-US" />
             </div>
             <div className="bg-gray-50 rounded-xl p-6">
-              <p className="text-gray-700 leading-relaxed whitespace-pre-line">{story.englishText}</p>
+              <HighlightText text={story.englishText} />
             </div>
           </div>
 

@@ -15,6 +15,8 @@ export default function VoiceReader({ text, language = 'en-US' }) {
     }
   }, []);
 
+  const { setHighlightedWordId } = useStore();
+
   const speak = () => {
     if (!speechSupported || !text) return;
 
@@ -34,11 +36,20 @@ export default function VoiceReader({ text, language = 'en-US' }) {
     utterance.onend = () => {
       setIsSpeaking(false);
       setIsPaused(false);
+      setHighlightedWordId(null);
     };
 
     utterance.onerror = () => {
       setIsSpeaking(false);
       setIsPaused(false);
+      setHighlightedWordId(null);
+    };
+
+    utterance.onboundary = (event) => {
+      if (event.name === 'word') {
+        const word = text.substr(event.charIndex, event.charLength).trim();
+        setHighlightedWordId(word);
+      }
     };
 
     utteranceRef.current = utterance;

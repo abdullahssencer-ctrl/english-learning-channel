@@ -1,7 +1,9 @@
 import { BookOpen, Home, FileText, ClipboardCheck, BarChart3, LogIn, LogOut, User, Layers, Moon, Sun, Menu, X } from 'lucide-react';
+import XPBar from './XPBar';
+import useStore from '../store/useStore';
 import { useState } from 'react';
 
-export default function Header({ activeSection, setActiveSection, onDashboardClick, user, onAuthClick, darkMode, setDarkMode }) {
+export default function Header({ activeSection, setActiveSection, onDashboardClick, user, onAuthClick }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
@@ -19,6 +21,25 @@ export default function Header({ activeSection, setActiveSection, onDashboardCli
     { id: 'c2-practice', label: 'C2 Pratik', icon: FileText, color: 'pink' },
     { id: 'c2-quiz', label: 'C2 Sınav', icon: ClipboardCheck, color: 'pink' },
   ];
+
+  const markAsCompleted = async () => {
+    if (!user) return;
+
+    try {
+      const success = await markStoryAsRead(user.id, story.id);
+      if (success) {
+        setIsCompleted(true);
+        // Gamification: add XP and streak
+        const addXp = useStore.getState().addXp;
+        const incrementStreak = useStore.getState().incrementStreak;
+        addXp(10);
+        incrementStreak();
+        // Optionally sync with Supabase user_stats table (handled elsewhere)
+      }
+    } catch (error) {
+      console.error('Hikaye tamamlanırken hata:', error);
+    }
+  };
 
   const handleNavClick = (item) => {
     if (item.action) {
@@ -69,12 +90,15 @@ export default function Header({ activeSection, setActiveSection, onDashboardCli
 
           {/* Desktop Auth & Theme */}
           <div className="hidden xl:flex items-center gap-3">
+            {/* Dark mode toggle using Zustand */}
             <button
-              onClick={() => setDarkMode(!darkMode)}
+              onClick={() => toggleDarkMode()}
               className="flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-colors bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
             >
-              {darkMode ? <Sun className="w-4 h-4 text-yellow-500" /> : <Moon className="w-4 h-4 text-gray-600" />}
+              {useStore(state => state.darkMode) ? <Sun className="w-4 h-4 text-yellow-500" /> : <Moon className="w-4 h-4 text-gray-600" />}
             </button>
+            {/* XP Bar */}
+            <XPBar />
             {user ? (
               <div className="flex items-center gap-2">
                 <button
