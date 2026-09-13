@@ -1,8 +1,6 @@
-// src/store/useStore.js
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
-// Global state: user, xp, streak, darkMode, lastStoryId, etc.
 const useStore = create(devtools((set, get) => ({
   highlightedWordId: null,
   setHighlightedWordId: (id) => set({ highlightedWordId: id }),
@@ -16,7 +14,7 @@ const useStore = create(devtools((set, get) => ({
   incrementStreak: () => {
     const today = new Date().toISOString().split('T')[0];
     const { lastCompletedDate, streak } = get();
-    if (lastCompletedDate === today) return; // already counted today
+    if (lastCompletedDate === today) return;
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayStr = yesterday.toISOString().split('T')[0];
@@ -29,6 +27,6 @@ const useStore = create(devtools((set, get) => ({
 
   lastStoryId: null,
   setLastStoryId: (id) => set({ lastStoryId: id }),
-}));
+})));
 
 export default useStore;
