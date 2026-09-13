@@ -1,5 +1,5 @@
 // src/store/useStore.js
-import create from 'zustand';
+import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 // Global state: user, xp, streak, darkMode, lastStoryId, etc.
