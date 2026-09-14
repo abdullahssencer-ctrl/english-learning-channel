@@ -4,17 +4,25 @@ import StoryCard from './StoryCard';
 import StoryDetail from './StoryDetail';
 import { Filter, Search } from 'lucide-react';
 
-export default function StoryList({ user, initialDifficulty }) {
+export default function StoryList({ user, initialDifficulty, initialStoryId }) {
   const [selectedDifficulty, setSelectedDifficulty] = useState(initialDifficulty || 'all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStory, setSelectedStory] = useState(null);
 
   // initialDifficulty değiştiğinde filtre güncelle
   useEffect(() => {
+    // Update difficulty filter if initialDifficulty prop changes
     if (initialDifficulty) {
       setSelectedDifficulty(initialDifficulty);
     }
-  }, [initialDifficulty]);
+    // If a last story ID is provided, pre-select that story
+    if (initialStoryId) {
+      const story = stories.find((s) => s.id === initialStoryId);
+      if (story) {
+        setSelectedStory(story);
+      }
+    }
+  }, [initialDifficulty, initialStoryId]);
 
   const filteredStories = useMemo(() => {
     return stories.filter(story => {
