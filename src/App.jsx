@@ -1,6 +1,7 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { supabase } from './supabase/config';
 import { getUserLastStory } from './supabase/lastStory';
+import useStore from './store/useStore';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import StoryList from './components/StoryList';

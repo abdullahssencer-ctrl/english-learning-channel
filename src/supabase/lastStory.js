@@ -25,7 +25,7 @@ export async function upsertUserLastStory(userId, storyId, scrollPos) {
         last_scroll_position: scrollPos,
         updated_at: new Date().toISOString(),
       },
-      { onConflict: ['user_id'] }
+      { onConflict: 'user_id' }
     )
     .select()
     .single();

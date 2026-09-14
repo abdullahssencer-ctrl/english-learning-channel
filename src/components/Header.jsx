@@ -1,45 +1,37 @@
-import { BookOpen, Home, FileText, ClipboardCheck, BarChart3, LogIn, LogOut, User, Layers, Moon, Sun, Menu, X } from 'lucide-react';
-import XPBar from './XPBar';
-import useStore from '../store/useStore';
+import { BookOpen, Home, FileText, ClipboardCheck, BarChart3, LogIn, LogOut, User, Layers, Moon, Sun, Menu, X, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
+import useStore from '../store/useStore';
+import XPBar from './XPBar';
 
 export default function Header({ activeSection, setActiveSection, onDashboardClick, user, onAuthClick }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [levelsMenuOpen, setLevelsMenuOpen] = useState(false);
+  const darkMode = useStore((state) => state.darkMode);
+  const toggleDarkMode = useStore((state) => state.toggleDarkMode);
 
-  const navItems = [
+  const mainNavItems = [
     { id: 'home', label: 'Ana Sayfa', icon: Home, color: 'indigo' },
     { id: 'dashboard', label: 'İlerleme', icon: BarChart3, color: 'indigo', action: onDashboardClick },
     { id: 'flashcards', label: 'Kelime Kartları', icon: Layers, color: 'purple' },
-    { id: 'a1-practice', label: 'A1 Pratik', icon: FileText, color: 'green' },
-    { id: 'a1-quiz', label: 'A1 Sınav', icon: ClipboardCheck, color: 'green' },
-    { id: 'a2-practice', label: 'A2 Pratik', icon: FileText, color: 'purple' },
-    { id: 'a2-quiz', label: 'A2 Sınav', icon: ClipboardCheck, color: 'purple' },
-    { id: 'b1-practice', label: 'B1 Pratik', icon: FileText, color: 'orange' },
-    { id: 'b1-quiz', label: 'B1 Sınav', icon: ClipboardCheck, color: 'orange' },
-    { id: 'c1-practice', label: 'C1 Pratik', icon: FileText, color: 'red' },
-    { id: 'c1-quiz', label: 'C1 Sınav', icon: ClipboardCheck, color: 'red' },
-    { id: 'c2-practice', label: 'C2 Pratik', icon: FileText, color: 'pink' },
-    { id: 'c2-quiz', label: 'C2 Sınav', icon: ClipboardCheck, color: 'pink' },
   ];
 
-  const markAsCompleted = async () => {
-    if (!user) return;
+  const levels = [
+    { key: 'a1', label: 'A1', color: 'green' },
+    { key: 'a2', label: 'A2', color: 'purple' },
+    { key: 'b1', label: 'B1', color: 'orange' },
+    { key: 'c1', label: 'C1', color: 'red' },
+    { key: 'c2', label: 'C2', color: 'pink' },
+  ];
 
-    try {
-      const success = await markStoryAsRead(user.id, story.id);
-      if (success) {
-        setIsCompleted(true);
-        // Gamification: add XP and streak
-        const addXp = useStore.getState().addXp;
-        const incrementStreak = useStore.getState().incrementStreak;
-        addXp(10);
-        incrementStreak();
-        // Optionally sync with Supabase user_stats table (handled elsewhere)
-      }
-    } catch (error) {
-      console.error('Hikaye tamamlanırken hata:', error);
-    }
-  };
+  const levelNavItems = levels.flatMap((level) => [
+    { id: `${level.key}-practice`, label: `${level.label.toUpperCase()} Pratik`, icon: FileText, color: level.color },
+    { id: `${level.key}-quiz`, label: `${level.label.toUpperCase()} Sınav`, icon: ClipboardCheck, color: level.color },
+  ]);
+
+  // Mobil menü hepsini tek listede düz gösterir
+  const navItems = [...mainNavItems, ...levelNavItems];
+
+  const isLevelSectionActive = levelNavItems.some((item) => item.id === activeSection);
 
   const handleNavClick = (item) => {
     if (item.action) {
@@ -48,6 +40,7 @@ export default function Header({ activeSection, setActiveSection, onDashboardCli
       setActiveSection(item.id);
     }
     setMobileMenuOpen(false);
+    setLevelsMenuOpen(false);
   };
 
   return (
@@ -55,20 +48,20 @@ export default function Header({ activeSection, setActiveSection, onDashboardCli
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-3">
-            <BookOpen className="w-8 h-8 text-indigo-600" />
+            <BookOpen className="w-8 h-8 text-indigo-600 flex-shrink-0" />
             <div>
               <h1 className="text-xl font-bold text-gray-900">English Learning</h1>
               <p className="text-xs text-gray-500 hidden sm:block">85 Hikaye ile İngilizce Öğrenin</p>
             </div>
           </div>
-          
+
           {/* Desktop Navigation */}
-          <nav className="hidden xl:flex flex-wrap gap-2">
-            {navItems.map((item) => (
+          <nav className="hidden lg:flex items-center gap-1">
+            {mainNavItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium text-sm transition-colors ${
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-colors ${
                   activeSection === item.id
                     ? `bg-${item.color}-100 text-${item.color}-700`
                     : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
@@ -78,27 +71,65 @@ export default function Header({ activeSection, setActiveSection, onDashboardCli
                 {item.label}
               </button>
             ))}
+
+            {/* Seviyeler dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setLevelsMenuOpen((open) => !open)}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-colors ${
+                  isLevelSectionActive
+                    ? 'bg-indigo-100 text-indigo-700'
+                    : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
+                }`}
+              >
+                <ClipboardCheck className="w-4 h-4" />
+                Seviyeler
+                <ChevronDown className={`w-4 h-4 transition-transform ${levelsMenuOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {levelsMenuOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setLevelsMenuOpen(false)} />
+                  <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-lg border border-gray-100 p-3 z-50">
+                    <div className="grid grid-cols-2 gap-2">
+                      {levelNavItems.map((item) => (
+                        <button
+                          key={item.id}
+                          onClick={() => handleNavClick(item)}
+                          className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium text-sm transition-colors ${
+                            activeSection === item.id
+                              ? `bg-${item.color}-100 text-${item.color}-700`
+                              : 'text-gray-700 hover:text-indigo-600 hover:bg-indigo-50'
+                          }`}
+                        >
+                          <item.icon className="w-4 h-4" />
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
           </nav>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="xl:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
 
           {/* Desktop Auth & Theme */}
-          <div className="hidden xl:flex items-center gap-3">
-            {/* Dark mode toggle using Zustand */}
+          <div className="hidden lg:flex items-center gap-3">
+            {user && <XPBar />}
             <button
               onClick={() => toggleDarkMode()}
               className="flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-colors bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
             >
-              {useStore(state => state.darkMode) ? <Sun className="w-4 h-4 text-yellow-500" /> : <Moon className="w-4 h-4 text-gray-600" />}
+              {darkMode ? <Sun className="w-4 h-4 text-yellow-500" /> : <Moon className="w-4 h-4 text-gray-600" />}
             </button>
-            {/* XP Bar */}
-            <XPBar />
             {user ? (
               <div className="flex items-center gap-2">
                 <button
@@ -130,7 +161,12 @@ export default function Header({ activeSection, setActiveSection, onDashboardCli
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="xl:hidden py-4 border-t border-gray-200">
+          <div className="lg:hidden py-4 border-t border-gray-200">
+            {user && (
+              <div className="mb-4">
+                <XPBar />
+              </div>
+            )}
             <div className="grid grid-cols-2 gap-2 mb-4">
               {navItems.map((item) => (
                 <button
@@ -149,7 +185,7 @@ export default function Header({ activeSection, setActiveSection, onDashboardCli
             </div>
             <div className="flex items-center justify-between pt-4 border-t border-gray-200">
               <button
-                onClick={() => setDarkMode(!darkMode)}
+                onClick={() => toggleDarkMode()}
                 className="flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-colors bg-gray-100 hover:bg-gray-200"
               >
                 {darkMode ? <Sun className="w-4 h-4 text-yellow-500" /> : <Moon className="w-4 h-4 text-gray-600" />}

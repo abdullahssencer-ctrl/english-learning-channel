@@ -14,7 +14,7 @@ export default function XPBar() {
         <span className="font-medium text-gray-800 dark:text-gray-200">XP: {xp}</span>
       </div>
       <div className="flex items-center space-x-1">
-        <svg className="w-5 h-5 text-green-5" fill="currentColor" viewBox="0 0 20 20">
+        <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
           <path d="M9 12l-2-2 1.41-1.42L9 9.17l4.59-4.58L15 6l-6 6z" />
         </svg>
         <span className="font-medium text-gray-800 dark:text-gray-200">Streak: {streak}</span>

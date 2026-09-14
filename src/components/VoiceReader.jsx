@@ -1,5 +1,6 @@
 import { Volume2, VolumeX, Play, Pause } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
+import useStore from '../store/useStore';
 
 export default function VoiceReader({ text, language = 'en-US' }) {
   const [isSpeaking, setIsSpeaking] = useState(false);

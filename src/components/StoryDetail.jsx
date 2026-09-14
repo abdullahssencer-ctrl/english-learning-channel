@@ -5,7 +5,7 @@ import { getUserProgress, markStoryAsRead, markWordAsLearned } from '../supabase
 import VoiceReader from './VoiceReader';
 import debounce from 'lodash.debounce';
 import { getUserLastStory, upsertUserLastStory } from '../supabase/lastStory';
-import { ArrowLeft, BookOpen, Clock, Tag, Check } from 'lucide-react';
+import { ArrowLeft, BookOpen, Clock, Tag, Check, Star } from 'lucide-react';
 
 export default function StoryDetail({ story, onBack, user }) {
   const [isCompleted, setIsCompleted] = useState(false);
